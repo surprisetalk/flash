@@ -1,15 +1,15 @@
 use Mix.Config
 
 # In this file, we keep production configuration that
-# you likely want to automate and keep it away from
+# you'll likely want to automate and keep away from
 # your version control system.
 #
 # You should document the content of this
 # file or create a script for recreating it, since it's
 # kept out of version control and might be hard to recover
-# or recreate for your teammates (or you later on).
-config :flash, Flash.Endpoint,
-  secret_key_base: "BI44EvOJLhRYs0dMDc1rFW5HIfUzNhqMzaG9pPxWeV5S88u1etUkwdqfPKl60A9R"
+# or recreate for your teammates (or yourself later on).
+config :flash, FlashWeb.Endpoint,
+  secret_key_base: "kfGO4EsJf3ORBsMTMoVhee+MUcOshs46IpSfTxOSHTYxFgx1LOjlckm6t4EJbu1Z"
 
 # Configure your database
 config :flash, Flash.Repo,
@@ -17,4 +17,4 @@ config :flash, Flash.Repo,
   username: "postgres",
   password: "postgres",
   database: "flash_prod",
-  pool_size: 20
+  pool_size: 15
