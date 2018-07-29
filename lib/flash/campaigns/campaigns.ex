@@ -8,6 +8,8 @@ defmodule Flash.Campaigns do
 
   alias Flash.Campaigns.Card
 
+  alias Ecto.Adapters.SQL
+
   @doc """
   Returns the list of cards.
 
@@ -19,6 +21,7 @@ defmodule Flash.Campaigns do
   """
   def list_cards do
     Repo.all(Card)
+    |> Enum.map(fn card -> %Card{ card | body: Enum.shuffle card.body } end)
   end
 
   @doc """

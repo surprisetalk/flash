@@ -23,8 +23,8 @@ defmodule FlashWeb.Router do
   scope "/api", FlashWeb do
     pipe_through :api
 
-    resources "/cards", CardController, except: [:new, :edit]
-    resources "/facts", FactController, except: [:new, :edit]
-    resources "/tasks", TaskController, except: [:new, :edit]
+    resources "/cards", CardController, only: [:index]
+    resources "/facts", FactController, only: [:update]
+    resources "/tasks", TaskController, only: [:update,:create]
   end
 end

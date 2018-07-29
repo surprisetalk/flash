@@ -12,6 +12,7 @@ defmodule FlashWeb.CardView do
 
   def render("card.json", %{card: card}) do
     %{id: card.id,
+      card_type: card.card_type,
       body: card.body}
   end
 end

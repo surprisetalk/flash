@@ -14,6 +14,7 @@ import Json.Encode as JE
 
 import Http
 import Keyboard
+-- TODO: Consider changing to gizra/elm-keyboard-event
 
 {-
 
@@ -120,6 +121,7 @@ type alias Model =
     }
   , draw            : Cards
   , graveyard       : Cards
+  , isCardFocused : Bool
   }
 
 type alias CardId = Int
@@ -146,7 +148,7 @@ type alias Sides = List Side
 
 type alias Side = String
 
-type alias Score = Int
+type alias Score = Float
 
 bodyDecoder =
   JD.field "data"
@@ -167,7 +169,7 @@ encodeCard = JE.string
 
 init : (Model, Cmd Msg)
 init =
-  Model { body = "", priority = 0.5 } [] [] ! [ Http.send LoadCards fetchCards ]
+  Model { body = "", priority = 0.5 } [] [] True ! [ Http.send LoadCards fetchCards ]
 
 fetchCards =
   Http.get "/api/cards" (bodyDecoder cardsDecoder)
@@ -186,6 +188,8 @@ type Msg
   | FlopCard
   | RateCard Score
   | SubmitNewTask
+  | FocusCard
+  | FocusNewTask
   | EditNewTaskBody String
   | EditNewTaskPriority Float
 
@@ -199,6 +203,10 @@ update msg ({newTask,draw,graveyard} as model) =
     NoOp -> model ! []
 
     Log x -> let _ = Debug.log "LOG" x in model ! []
+
+    FocusCard -> { model | isCardFocused = True } ! []
+
+    FocusNewTask -> { model | isCardFocused = False } ! []
 
     FetchCards -> model ! [ Http.send LoadCards fetchCards ]
 
@@ -234,19 +242,31 @@ update msg ({newTask,draw,graveyard} as model) =
 
                       [] -> model ! []
 
-                      card :: _ -> model !
-                                   [ Http.send
-                                       (combineResult (always NextCard) (toString >> Log))
-                                       <| Http.request
-                                          { method = "POST"
-                                          , headers = []
-                                          , url = "/api/cards/score"
-                                          , body = Http.jsonBody (JE.int n)
-                                          , expect = expectNothing
-                                          , timeout = Nothing
-                                          , withCredentials = False
-                                          }
-                                   ]
+                      {id,ctype} :: _ ->
+                        
+                        case ctype of
+
+                          Task ->
+
+                            model ! []
+
+                          Fact ->
+
+                            model ! [ Http.send
+                                      (combineResult (always NextCard) (toString >> Log))
+                                      <| Http.request
+                                         { method = "PUT"
+                                         , headers = []
+                                         , url = "/api/facts/" ++ toString id
+                                         , body = Http.jsonBody
+                                               <| JE.object
+                                                  [ "score" => JE.float n
+                                                  ]
+                                         , expect = expectNothing
+                                         , timeout = Nothing
+                                         , withCredentials = False
+                                         }
+                                    ]
 
     SubmitNewTask -> model !
                      [ Http.send
@@ -270,25 +290,53 @@ update msg ({newTask,draw,graveyard} as model) =
 -- SUBSCRIPTIONS --------------------------------------------------------------
 
 subscriptions : Model -> Sub Msg
-subscriptions {newTask} =
+subscriptions {newTask,isCardFocused} =
   Sub.batch
     [ let handleKeypress keyCode =
-        case Char.fromCode keyCode of
-          '\r' -> SubmitNewTask
-          'J'  -> EditNewTaskPriority <| newTask.priority - 0.1
-          'K'  -> EditNewTaskPriority <| newTask.priority + 0.1
-          'r'  -> FetchCards
-          'l'  -> NextCard
-          'h'  -> PrevCard
-          'j'  -> FlopCard
-          'k'  -> FlipCard
-          ' '  -> FlipCard
-          '\'' -> RateCard 1
-          ','  -> RateCard 2
-          '.'  -> RateCard 3
-          'p'  -> RateCard 4
-          _    -> NoOp
-          -- c    -> Log <| toString c
+        case isCardFocused of
+          False ->
+            case Char.fromCode keyCode of
+              'À'  -> FocusCard
+               -- `
+              _    -> NoOp
+          True ->
+            case Char.fromCode keyCode of
+              'À'  -> FocusNewTask
+               -- `
+              '\r' -> SubmitNewTask
+              -- 'J'  -> EditNewTaskPriority <| newTask.priority - 0.1
+              -- 'K'  -> EditNewTaskPriority <| newTask.priority + 0.1
+              'R'  -> FetchCards
+              'L'  -> NextCard
+              'H'  -> PrevCard
+              'J'  -> FlopCard
+              'K'  -> FlipCard
+              ' '  -> FlipCard
+              '%'  -> PrevCard
+              -- Left arrow.
+              '&'  -> FlipCard
+              -- Up arrow.
+              '('  -> FlopCard
+              -- Down arrow.
+              '\'' -> NextCard
+              -- Also the right arrow.
+              '0'  -> EditNewTaskPriority 0.0
+              '1'  -> EditNewTaskPriority 0.1
+              '2'  -> EditNewTaskPriority 0.2
+              '3'  -> EditNewTaskPriority 0.3
+              '4'  -> EditNewTaskPriority 0.4
+              '5'  -> EditNewTaskPriority 0.5
+              '6'  -> EditNewTaskPriority 0.6
+              '7'  -> EditNewTaskPriority 0.7
+              '8'  -> EditNewTaskPriority 0.8
+              '9'  -> EditNewTaskPriority 0.9
+              'B'  -> RateCard 0.0
+              'M'  -> RateCard 0.25
+              'W'  -> RateCard 0.5
+              'V'  -> RateCard 0.75
+              'Z'  -> RateCard 1.0
+              -- _    -> NoOp
+              c    -> Log <| toString c
       in Keyboard.downs handleKeypress
     ]
 
@@ -296,16 +344,41 @@ subscriptions {newTask} =
 -- VIEW -----------------------------------------------------------------------
 
 view : Model -> Html Msg
-view ({newTask,draw} as model) =
+view ({newTask,draw,isCardFocused} as model) =
 
-  div []
-    [ div []
-        [ span [] [ newTask.priority |> (*) 10 |> round |> toString |> text ]
-        , textarea [ value newTask.body, onInput EditNewTaskBody ] []
+  main_ []
+  [ div [ id "card"
+        , onClick FocusCard
+        , style <| if isCardFocused then [] else [ "background-color" => "#DDD" ]
         ]
-    , case draw of
+      <| case draw of
 
-          [] -> text "no cards"
-            
-          card :: _ -> card |> toString |> text
+           [] -> [ span [] [] ]
+             
+           {id,sides} :: _ ->
+
+             case sides of
+
+               [] ->
+
+                 [ id |> toString |> text
+                 ]
+
+               front :: _ ->
+
+                 [ h3 []
+                   [ id |> toString |> text
+                   ]
+                 , p []
+                   [ text front
+                   ]
+                 ]
+
+  , div [ id "new-task"
+        , onClick FocusNewTask
+        , style <| if isCardFocused then [ "background-color" => "#DDD" ] else []
+        ]
+    [ h1 [] [ newTask.priority |> (*) 10 |> round |> toString |> text ]
+    , textarea [ value newTask.body, onInput EditNewTaskBody ] []
     ]
+  ]

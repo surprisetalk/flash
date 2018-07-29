@@ -1,1 +1,36 @@
-/* This file is for your main application css. */
+
+html {
+}
+
+body {
+    margin: 0;
+}
+
+main {
+    display: grid;
+    grid-template-rows: 2fr 1fr;
+    height: 100vh;
+}
+
+#card {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    margin: 50px;
+}
+
+#card p {
+    font-size: 32pt;
+    padding: 25px;
+    border: 1px solid #DDD;
+    border-radius: 5px;
+}
+
+#new-task {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    padding: 50px;
+}
+        

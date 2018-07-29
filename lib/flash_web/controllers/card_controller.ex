@@ -24,19 +24,4 @@ defmodule FlashWeb.CardController do
     card = Campaigns.get_card!(id)
     render(conn, "show.json", card: card)
   end
-
-  def update(conn, %{"id" => id, "card" => card_params}) do
-    card = Campaigns.get_card!(id)
-
-    with {:ok, %Card{} = card} <- Campaigns.update_card(card, card_params) do
-      render(conn, "show.json", card: card)
-    end
-  end
-
-  def delete(conn, %{"id" => id}) do
-    card = Campaigns.get_card!(id)
-    with {:ok, %Card{}} <- Campaigns.delete_card(card) do
-      send_resp(conn, :no_content, "")
-    end
-  end
 end

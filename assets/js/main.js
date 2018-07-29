@@ -13392,9 +13392,9 @@ _user$project$Main_ops['=>'] = F2(
 	function (v0, v1) {
 		return {ctor: '_Tuple2', _0: v0, _1: v1};
 	});
-var _user$project$Main$Model = F3(
-	function (a, b, c) {
-		return {newTask: a, draw: b, graveyard: c};
+var _user$project$Main$Model = F4(
+	function (a, b, c, d) {
+		return {newTask: a, draw: b, graveyard: c, isCardFocused: d};
 	});
 var _user$project$Main$Card = F3(
 	function (a, b, c) {
@@ -13437,64 +13437,144 @@ var _user$project$Main$EditNewTaskPriority = function (a) {
 var _user$project$Main$EditNewTaskBody = function (a) {
 	return {ctor: 'EditNewTaskBody', _0: a};
 };
+var _user$project$Main$FocusNewTask = {ctor: 'FocusNewTask'};
+var _user$project$Main$FocusCard = {ctor: 'FocusCard'};
 var _user$project$Main$view = function (_p5) {
 	var _p6 = _p5;
-	var _p8 = _p6.newTask;
+	var _p11 = _p6.newTask;
+	var _p10 = _p6.isCardFocused;
 	return A2(
-		_elm_lang$html$Html$div,
+		_elm_lang$html$Html$main_,
 		{ctor: '[]'},
 		{
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$div,
-				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$span,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								_elm_lang$core$Basics$toString(
-									_elm_lang$core$Basics$round(
-										A2(
-											F2(
-												function (x, y) {
-													return x * y;
-												}),
-											10,
-											_p8.priority)))),
-							_1: {ctor: '[]'}
-						}),
+					_0: _elm_lang$html$Html_Attributes$id('card'),
 					_1: {
 						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$textarea,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$value(_p8.body),
-								_1: {
+						_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$FocusCard),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$style(
+								_p10 ? {ctor: '[]'} : {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$EditNewTaskBody),
+									_0: A2(_user$project$Main_ops['=>'], 'background-color', '#DDD'),
 									_1: {ctor: '[]'}
-								}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
+								}),
+							_1: {ctor: '[]'}
+						}
 					}
-				}),
-			_1: {
-				ctor: '::',
-				_0: function () {
+				},
+				function () {
 					var _p7 = _p6.draw;
 					if (_p7.ctor === '[]') {
-						return _elm_lang$html$Html$text('no cards');
+						return {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{ctor: '[]'},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						};
 					} else {
-						return _elm_lang$html$Html$text(
-							_elm_lang$core$Basics$toString(_p7._0));
+						var _p9 = _p7._0.id;
+						var _p8 = _p7._0.sides;
+						if (_p8.ctor === '[]') {
+							return {
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(_p9)),
+								_1: {ctor: '[]'}
+							};
+						} else {
+							return {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$h3,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											_elm_lang$core$Basics$toString(_p9)),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$p,
+										{ctor: '[]'},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text(_p8._0),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							};
+						}
 					}
-				}(),
+				}()),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$id('new-task'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$Main$FocusNewTask),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$style(
+									_p10 ? {
+										ctor: '::',
+										_0: A2(_user$project$Main_ops['=>'], 'background-color', '#DDD'),
+										_1: {ctor: '[]'}
+									} : {ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$h1,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									_elm_lang$core$Basics$toString(
+										_elm_lang$core$Basics$round(
+											A2(
+												F2(
+													function (x, y) {
+														return x * y;
+													}),
+												10,
+												_p11.priority)))),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$textarea,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$value(_p11.body),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$html$Html_Events$onInput(_user$project$Main$EditNewTaskBody),
+										_1: {ctor: '[]'}
+									}
+								},
+								{ctor: '[]'}),
+							_1: {ctor: '[]'}
+						}
+					}),
 				_1: {ctor: '[]'}
 			}
 		});
@@ -13513,11 +13593,12 @@ var _user$project$Main$LoadCards = function (a) {
 };
 var _user$project$Main$init = A2(
 	_elm_lang$core$Platform_Cmd_ops['!'],
-	A3(
+	A4(
 		_user$project$Main$Model,
 		{body: '', priority: 0.5},
 		{ctor: '[]'},
-		{ctor: '[]'}),
+		{ctor: '[]'},
+		true),
 	{
 		ctor: '::',
 		_0: A2(_elm_lang$http$Http$send, _user$project$Main$LoadCards, _user$project$Main$fetchCards),
@@ -13527,180 +13608,213 @@ var _user$project$Main$Log = function (a) {
 	return {ctor: 'Log', _0: a};
 };
 var _user$project$Main$update = F2(
-	function (msg, _p9) {
-		var _p10 = _p9;
-		var _p26 = _p10.newTask;
-		var _p25 = _p10;
-		var _p24 = _p10.graveyard;
-		var _p23 = _p10.draw;
-		var _p11 = msg;
-		switch (_p11.ctor) {
+	function (msg, _p12) {
+		var _p13 = _p12;
+		var _p30 = _p13.newTask;
+		var _p29 = _p13;
+		var _p28 = _p13.graveyard;
+		var _p27 = _p13.draw;
+		var _p14 = msg;
+		switch (_p14.ctor) {
 			case 'NoOp':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
-					_p25,
+					_p29,
 					{ctor: '[]'});
 			case 'Log':
-				var _p12 = A2(_elm_lang$core$Debug$log, 'LOG', _p11._0);
+				var _p15 = A2(_elm_lang$core$Debug$log, 'LOG', _p14._0);
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
-					_p25,
+					_p29,
+					{ctor: '[]'});
+			case 'FocusCard':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						_p29,
+						{isCardFocused: true}),
+					{ctor: '[]'});
+			case 'FocusNewTask':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						_p29,
+						{isCardFocused: false}),
 					{ctor: '[]'});
 			case 'FetchCards':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
-					_p25,
+					_p29,
 					{
 						ctor: '::',
 						_0: A2(_elm_lang$http$Http$send, _user$project$Main$LoadCards, _user$project$Main$fetchCards),
 						_1: {ctor: '[]'}
 					});
 			case 'LoadCards':
-				if (_p11._0.ctor === 'Ok') {
+				if (_p14._0.ctor === 'Ok') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
-							_p25,
+							_p29,
 							{
-								draw: _p11._0._0,
+								draw: _p14._0._0,
 								graveyard: {ctor: '[]'}
 							}),
 						{ctor: '[]'});
 				} else {
-					var _p13 = A2(_elm_lang$core$Debug$log, 'ERROR', _p11._0._0);
+					var _p16 = A2(_elm_lang$core$Debug$log, 'ERROR', _p14._0._0);
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						_p25,
+						_p29,
 						{ctor: '[]'});
 				}
 			case 'NextCard':
-				var _p14 = _p23;
-				if (_p14.ctor === '[]') {
+				var _p17 = _p27;
+				if (_p17.ctor === '[]') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						_p25,
+						_p29,
 						{ctor: '[]'});
 				} else {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
-							_p25,
+							_p29,
 							{
-								draw: _p14._1,
-								graveyard: {ctor: '::', _0: _p14._0, _1: _p24}
+								draw: _p17._1,
+								graveyard: {ctor: '::', _0: _p17._0, _1: _p28}
 							}),
 						{ctor: '[]'});
 				}
 			case 'PrevCard':
-				var _p15 = _p24;
-				if (_p15.ctor === '[]') {
+				var _p18 = _p28;
+				if (_p18.ctor === '[]') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						_p25,
+						_p29,
 						{ctor: '[]'});
 				} else {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
-							_p25,
+							_p29,
 							{
-								draw: {ctor: '::', _0: _p15._0, _1: _p23},
-								graveyard: _p15._1
+								draw: {ctor: '::', _0: _p18._0, _1: _p27},
+								graveyard: _p18._1
 							}),
 						{ctor: '[]'});
 				}
 			case 'FlipCard':
-				var _p16 = _p23;
-				if (_p16.ctor === '[]') {
+				var _p19 = _p27;
+				if (_p19.ctor === '[]') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						_p25,
+						_p29,
 						{ctor: '[]'});
 				} else {
-					var _p17 = _p16._0;
+					var _p20 = _p19._0;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
-							_p25,
+							_p29,
 							{
 								draw: {
 									ctor: '::',
 									_0: _elm_lang$core$Native_Utils.update(
-										_p17,
+										_p20,
 										{
-											sides: _user$project$Main$cycle(_p17.sides)
+											sides: _user$project$Main$cycle(_p20.sides)
 										}),
-									_1: _p16._1
+									_1: _p19._1
 								}
 							}),
 						{ctor: '[]'});
 				}
 			case 'FlopCard':
-				var _p18 = _p23;
-				if (_p18.ctor === '[]') {
+				var _p21 = _p27;
+				if (_p21.ctor === '[]') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						_p25,
+						_p29,
 						{ctor: '[]'});
 				} else {
-					var _p19 = _p18._0;
+					var _p22 = _p21._0;
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
-							_p25,
+							_p29,
 							{
 								draw: {
 									ctor: '::',
 									_0: _elm_lang$core$Native_Utils.update(
-										_p19,
+										_p22,
 										{
-											sides: _user$project$Main$uncycle(_p19.sides)
+											sides: _user$project$Main$uncycle(_p22.sides)
 										}),
-									_1: _p18._1
+									_1: _p21._1
 								}
 							}),
 						{ctor: '[]'});
 				}
 			case 'RateCard':
-				var _p20 = _p23;
-				if (_p20.ctor === '[]') {
+				var _p23 = _p27;
+				if (_p23.ctor === '[]') {
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
-						_p25,
+						_p29,
 						{ctor: '[]'});
 				} else {
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_p25,
-						{
-							ctor: '::',
-							_0: A2(
-								_elm_lang$http$Http$send,
-								A2(
-									_user$project$Main$combineResult,
-									_elm_lang$core$Basics$always(_user$project$Main$NextCard),
-									function (_p21) {
-										return _user$project$Main$Log(
-											_elm_lang$core$Basics$toString(_p21));
-									}),
-								_elm_lang$http$Http$request(
-									{
-										method: 'POST',
-										headers: {ctor: '[]'},
-										url: '/api/cards/score',
-										body: _elm_lang$http$Http$jsonBody(
-											_elm_lang$core$Json_Encode$int(_p11._0)),
-										expect: _user$project$Main$expectNothing,
-										timeout: _elm_lang$core$Maybe$Nothing,
-										withCredentials: false
-									})),
-							_1: {ctor: '[]'}
-						});
+					var _p24 = _p23._0.ctype;
+					if (_p24.ctor === 'Task') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_p29,
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_p29,
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$http$Http$send,
+									A2(
+										_user$project$Main$combineResult,
+										_elm_lang$core$Basics$always(_user$project$Main$NextCard),
+										function (_p25) {
+											return _user$project$Main$Log(
+												_elm_lang$core$Basics$toString(_p25));
+										}),
+									_elm_lang$http$Http$request(
+										{
+											method: 'PUT',
+											headers: {ctor: '[]'},
+											url: A2(
+												_elm_lang$core$Basics_ops['++'],
+												'/api/facts/',
+												_elm_lang$core$Basics$toString(_p23._0.id)),
+											body: _elm_lang$http$Http$jsonBody(
+												_elm_lang$core$Json_Encode$object(
+													{
+														ctor: '::',
+														_0: A2(
+															_user$project$Main_ops['=>'],
+															'score',
+															_elm_lang$core$Json_Encode$float(_p14._0)),
+														_1: {ctor: '[]'}
+													})),
+											expect: _user$project$Main$expectNothing,
+											timeout: _elm_lang$core$Maybe$Nothing,
+											withCredentials: false
+										})),
+								_1: {ctor: '[]'}
+							});
+					}
 				}
 			case 'SubmitNewTask':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
-					_p25,
+					_p29,
 					{
 						ctor: '::',
 						_0: A2(
@@ -13709,9 +13823,9 @@ var _user$project$Main$update = F2(
 								_user$project$Main$combineResult,
 								_elm_lang$core$Basics$always(
 									_user$project$Main$EditNewTaskBody('')),
-								function (_p22) {
+								function (_p26) {
 									return _user$project$Main$Log(
-										_elm_lang$core$Basics$toString(_p22));
+										_elm_lang$core$Basics$toString(_p26));
 								}),
 							_elm_lang$http$Http$request(
 								{
@@ -13731,13 +13845,13 @@ var _user$project$Main$update = F2(
 															_0: A2(
 																_user$project$Main_ops['=>'],
 																'body',
-																_elm_lang$core$Json_Encode$string(_p26.body)),
+																_elm_lang$core$Json_Encode$string(_p30.body)),
 															_1: {
 																ctor: '::',
 																_0: A2(
 																	_user$project$Main_ops['=>'],
 																	'priority',
-																	_elm_lang$core$Json_Encode$float(_p26.priority)),
+																	_elm_lang$core$Json_Encode$float(_p30.priority)),
 																_1: {ctor: '[]'}
 															}
 														})),
@@ -13753,67 +13867,105 @@ var _user$project$Main$update = F2(
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
-						_p25,
+						_p29,
 						{
 							newTask: _elm_lang$core$Native_Utils.update(
-								_p26,
-								{body: _p11._0})
+								_p30,
+								{body: _p14._0})
 						}),
 					{ctor: '[]'});
 			default:
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
 					_elm_lang$core$Native_Utils.update(
-						_p25,
+						_p29,
 						{
 							newTask: _elm_lang$core$Native_Utils.update(
-								_p26,
+								_p30,
 								{
-									priority: A3(_elm_lang$core$Basics$clamp, 0, 1, _p11._0)
+									priority: A3(_elm_lang$core$Basics$clamp, 0, 1, _p14._0)
 								})
 						}),
 					{ctor: '[]'});
 		}
 	});
 var _user$project$Main$NoOp = {ctor: 'NoOp'};
-var _user$project$Main$subscriptions = function (_p27) {
-	var _p28 = _p27;
-	var _p30 = _p28.newTask;
+var _user$project$Main$subscriptions = function (_p31) {
+	var _p32 = _p31;
 	return _elm_lang$core$Platform_Sub$batch(
 		{
 			ctor: '::',
 			_0: function () {
 				var handleKeypress = function (keyCode) {
-					var _p29 = _elm_lang$core$Char$fromCode(keyCode);
-					switch (_p29.valueOf()) {
-						case '\r':
-							return _user$project$Main$SubmitNewTask;
-						case 'J':
-							return _user$project$Main$EditNewTaskPriority(_p30.priority - 0.1);
-						case 'K':
-							return _user$project$Main$EditNewTaskPriority(_p30.priority + 0.1);
-						case 'r':
-							return _user$project$Main$FetchCards;
-						case 'l':
-							return _user$project$Main$NextCard;
-						case 'h':
-							return _user$project$Main$PrevCard;
-						case 'j':
-							return _user$project$Main$FlopCard;
-						case 'k':
-							return _user$project$Main$FlipCard;
-						case ' ':
-							return _user$project$Main$FlipCard;
-						case '\'':
-							return _user$project$Main$RateCard(1);
-						case ',':
-							return _user$project$Main$RateCard(2);
-						case '.':
-							return _user$project$Main$RateCard(3);
-						case 'p':
-							return _user$project$Main$RateCard(4);
-						default:
+					var _p33 = _p32.isCardFocused;
+					if (_p33 === false) {
+						var _p34 = _elm_lang$core$Char$fromCode(keyCode);
+						if (_p34.valueOf() === 'À') {
+							return _user$project$Main$FocusCard;
+						} else {
 							return _user$project$Main$NoOp;
+						}
+					} else {
+						var _p35 = _elm_lang$core$Char$fromCode(keyCode);
+						switch (_p35.valueOf()) {
+							case 'À':
+								return _user$project$Main$FocusNewTask;
+							case '\r':
+								return _user$project$Main$SubmitNewTask;
+							case 'R':
+								return _user$project$Main$FetchCards;
+							case 'L':
+								return _user$project$Main$NextCard;
+							case 'H':
+								return _user$project$Main$PrevCard;
+							case 'J':
+								return _user$project$Main$FlopCard;
+							case 'K':
+								return _user$project$Main$FlipCard;
+							case ' ':
+								return _user$project$Main$FlipCard;
+							case '%':
+								return _user$project$Main$PrevCard;
+							case '&':
+								return _user$project$Main$FlipCard;
+							case '(':
+								return _user$project$Main$FlopCard;
+							case '\'':
+								return _user$project$Main$NextCard;
+							case '0':
+								return _user$project$Main$EditNewTaskPriority(0.0);
+							case '1':
+								return _user$project$Main$EditNewTaskPriority(0.1);
+							case '2':
+								return _user$project$Main$EditNewTaskPriority(0.2);
+							case '3':
+								return _user$project$Main$EditNewTaskPriority(0.3);
+							case '4':
+								return _user$project$Main$EditNewTaskPriority(0.4);
+							case '5':
+								return _user$project$Main$EditNewTaskPriority(0.5);
+							case '6':
+								return _user$project$Main$EditNewTaskPriority(0.6);
+							case '7':
+								return _user$project$Main$EditNewTaskPriority(0.7);
+							case '8':
+								return _user$project$Main$EditNewTaskPriority(0.8);
+							case '9':
+								return _user$project$Main$EditNewTaskPriority(0.9);
+							case 'B':
+								return _user$project$Main$RateCard(0.0);
+							case 'M':
+								return _user$project$Main$RateCard(0.25);
+							case 'W':
+								return _user$project$Main$RateCard(0.5);
+							case 'V':
+								return _user$project$Main$RateCard(0.75);
+							case 'Z':
+								return _user$project$Main$RateCard(1.0);
+							default:
+								return _user$project$Main$Log(
+									_elm_lang$core$Basics$toString(_p35));
+						}
 					}
 				};
 				return _elm_lang$keyboard$Keyboard$downs(handleKeypress);
@@ -13827,7 +13979,7 @@ var _user$project$Main$main = _elm_lang$html$Html$program(
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
 if (typeof _user$project$Main$main !== 'undefined') {
-    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Main.Msg":{"args":[],"tags":{"Log":["String"],"EditNewTaskPriority":["Float"],"FlipCard":[],"EditNewTaskBody":["String"],"NextCard":[],"RateCard":["Main.Score"],"LoadCards":["Result.Result Http.Error Main.Cards"],"FlopCard":[],"PrevCard":[],"SubmitNewTask":[],"FetchCards":[],"NoOp":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.CardType":{"args":[],"tags":{"Task":[],"Fact":[]}}},"aliases":{"Main.Cards":{"args":[],"type":"List Main.Card"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.Sides":{"args":[],"type":"List Main.Side"},"Main.Side":{"args":[],"type":"String"},"Main.Card":{"args":[],"type":"{ id : Main.CardId, sides : Main.Sides, ctype : Main.CardType }"},"Main.CardId":{"args":[],"type":"Int"},"Main.Score":{"args":[],"type":"Int"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
+    _user$project$Main$main(Elm['Main'], 'Main', {"types":{"unions":{"Dict.LeafColor":{"args":[],"tags":{"LBBlack":[],"LBlack":[]}},"Dict.Dict":{"args":["k","v"],"tags":{"RBNode_elm_builtin":["Dict.NColor","k","v","Dict.Dict k v","Dict.Dict k v"],"RBEmpty_elm_builtin":["Dict.LeafColor"]}},"Main.Msg":{"args":[],"tags":{"Log":["String"],"EditNewTaskPriority":["Float"],"FlipCard":[],"FocusNewTask":[],"EditNewTaskBody":["String"],"FocusCard":[],"NextCard":[],"RateCard":["Main.Score"],"LoadCards":["Result.Result Http.Error Main.Cards"],"FlopCard":[],"PrevCard":[],"SubmitNewTask":[],"FetchCards":[],"NoOp":[]}},"Dict.NColor":{"args":[],"tags":{"BBlack":[],"Red":[],"NBlack":[],"Black":[]}},"Http.Error":{"args":[],"tags":{"BadUrl":["String"],"NetworkError":[],"Timeout":[],"BadStatus":["Http.Response String"],"BadPayload":["String","Http.Response String"]}},"Result.Result":{"args":["error","value"],"tags":{"Ok":["value"],"Err":["error"]}},"Main.CardType":{"args":[],"tags":{"Task":[],"Fact":[]}}},"aliases":{"Main.Cards":{"args":[],"type":"List Main.Card"},"Http.Response":{"args":["body"],"type":"{ url : String , status : { code : Int, message : String } , headers : Dict.Dict String String , body : body }"},"Main.Sides":{"args":[],"type":"List Main.Side"},"Main.Side":{"args":[],"type":"String"},"Main.Card":{"args":[],"type":"{ id : Main.CardId, sides : Main.Sides, ctype : Main.CardType }"},"Main.CardId":{"args":[],"type":"Int"},"Main.Score":{"args":[],"type":"Float"}},"message":"Main.Msg"},"versions":{"elm":"0.18.0"}});
 }
 
 if (typeof define === "function" && define['amd'])
