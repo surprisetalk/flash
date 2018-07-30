@@ -25,6 +25,6 @@ defmodule FlashWeb.Router do
 
     resources "/cards", CardController, only: [:index]
     resources "/facts", FactController, only: [:update]
-    resources "/tasks", TaskController, only: [:update,:create]
+    resources "/tasks", TaskController, only: [:update,:create,:show]
   end
 end

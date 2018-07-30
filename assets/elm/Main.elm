@@ -169,7 +169,7 @@ encodeCard = JE.string
 
 init : (Model, Cmd Msg)
 init =
-  Model { body = "", priority = 0.5 } [] [] True ! [ Http.send LoadCards fetchCards ]
+  Model { body = "", priority = 0.6 } [] [] True ! [ Http.send LoadCards fetchCards ]
 
 fetchCards =
   Http.get "/api/cards" (bodyDecoder cardsDecoder)
@@ -187,9 +187,12 @@ type Msg
   | FlipCard
   | FlopCard
   | RateCard Score
+  | CompleteTask
+  | UncompleteTask
   | SubmitNewTask
   | FocusCard
   | FocusNewTask
+  | ClearNewTask
   | EditNewTaskBody String
   | EditNewTaskPriority Float
 
@@ -238,6 +241,72 @@ update msg ({newTask,draw,graveyard} as model) =
 
                     card :: cards -> { model | draw = { card | sides = uncycle card.sides } :: cards } ! []
 
+    CompleteTask -> case draw of
+
+                      [] -> model ! []
+
+                      {id,ctype} :: _ ->
+                        
+                        case ctype of
+
+                          Fact ->
+
+                            model ! []
+
+                          Task ->
+
+                            model ! [ Http.send
+                                      (combineResult (always NextCard) (toString >> Log))
+                                      <| Http.request
+                                         { method = "PATCH"
+                                         , headers = []
+                                         , url = "/api/tasks/" ++ toString id
+                                         , body = Http.jsonBody
+                                               <| JE.object
+                                                  [ "task"
+                                                    => JE.object
+                                                       [ "is_completed" => JE.bool True
+                                                       ]
+                                                  ]
+                                         , expect = expectNothing
+                                         , timeout = Nothing
+                                         , withCredentials = False
+                                         }
+                                    ]
+
+    UncompleteTask -> case draw of
+
+                        [] -> model ! []
+
+                        {id,ctype} :: _ ->
+                          
+                          case ctype of
+
+                            Fact ->
+
+                              model ! []
+
+                            Task ->
+
+                              model ! [ Http.send
+                                        (combineResult (always NextCard) (toString >> Log))
+                                        <| Http.request
+                                           { method = "PATCH"
+                                           , headers = []
+                                           , url = "/api/tasks/" ++ toString id
+                                           , body = Http.jsonBody
+                                                 <| JE.object
+                                                    [ "task"
+                                                      => JE.object
+                                                         [ "is_completed" => JE.bool False
+                                                         ]
+                                                    ]
+                                           , expect = expectNothing
+                                           , timeout = Nothing
+                                           , withCredentials = False
+                                           }
+                                      ]
+
     RateCard n -> case draw of
 
                       [] -> model ! []
@@ -270,7 +339,7 @@ update msg ({newTask,draw,graveyard} as model) =
 
     SubmitNewTask -> model !
                      [ Http.send
-                         (combineResult (always (EditNewTaskBody "")) (toString >> Log))
+                         (combineResult (always ClearNewTask) (toString >> Log))
                          <| Http.request
                             { method = "POST"
                             , headers = []
@@ -281,6 +350,8 @@ update msg ({newTask,draw,graveyard} as model) =
                             , withCredentials = False
                             }
                      ]
+
+    ClearNewTask -> { model | newTask = { body = "", priority = 0.6 } } ! []
 
     EditNewTaskBody body -> { model | newTask = { newTask | body = body } } ! []
 
@@ -366,12 +437,34 @@ view ({newTask,draw,isCardFocused} as model) =
 
                front :: _ ->
 
-                 [ h3 []
-                   [ id |> toString |> text
+                 [ div []
+                   [ h3 []
+                     [ id |> toString |> text
+                     ]
+                   , button [ onClick CompleteTask ]
+                     [ text "Done"
+                     ]
+                   , button [ onClick UncompleteTask ]
+                     [ text "Not Done"
+                     ]
                    ]
-                 , p []
-                   [ text front
-                   ]
+                 , case String.endsWith ".mp3" front of
+
+                     True -> 
+
+                       audio [ controls True, autoplay True ]
+                       [ flip source []
+                         [ src <| "/sounds/" ++ front
+                         , type_ "audio/mpeg"
+                         ]
+                       ]
+
+                     False ->
+
+                       p []
+                       [ text front
+                       ]
+                 -- TODO: Hints
                  ]
 
   , div [ id "new-task"
@@ -379,6 +472,9 @@ view ({newTask,draw,isCardFocused} as model) =
         , style <| if isCardFocused then [ "background-color" => "#DDD" ] else []
         ]
     [ h1 [] [ newTask.priority |> (*) 10 |> round |> toString |> text ]
-    , textarea [ value newTask.body, onInput EditNewTaskBody ] []
+    , div []
+      [ textarea [ value newTask.body, onInput EditNewTaskBody ] []
+      , button [ onClick SubmitNewTask ] [ text "Create Task" ]
+      ]
     ]
   ]

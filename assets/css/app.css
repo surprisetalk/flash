@@ -14,12 +14,18 @@ main {
 
 #card {
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 100px 1fr;
     justify-content: center;
     justify-items: center;
     align-items: center;
-    margin: 50px;
+    padding: 50px;
 }
+
+#card > div {
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
 
 #card p {
     font-size: 32pt;
@@ -30,7 +36,11 @@ main {
 
 #new-task {
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 100px 1fr;
     padding: 50px;
 }
         
+#new-task > div {
+    display: grid;
+    grid-template-rows: 1fr 50px;
+}
